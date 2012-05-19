@@ -1,6 +1,9 @@
 <?php
 include "chan_archiver.php";
 $t = new chan_archiver();
+if ( isset( $_REQUEST[ 'del' ] ) && isset( $_REQUEST[ 'id' ] ) && isset( $_REQUEST[ 'brd' ] ) )
+    $t->removeThread( $_REQUEST[ 'id' ], $_REQUEST[ 'brd' ] );
+    
 if ( isset( $_REQUEST[ 'chk' ] ) && isset( $_REQUEST[ 'id' ] ) && isset( $_REQUEST[ 'brd' ] ) )
     $t->updateThread( $_REQUEST[ 'id' ], $_REQUEST[ 'brd' ] );
 
@@ -11,19 +14,19 @@ if ( isset( $_REQUEST[ 'url' ] ) && $c = preg_match_all( "/.*?(?:[a-z][a-z0-9_]*
 {
     $board = $matches[ 1 ][ 0 ];
     $id    = $matches[ 2 ][ 0 ];
-    $t->addThread( $id, $board, "" );
+    $t->addThread( $id, $board, $_REQUEST['desc'] );
 }
 
 $threads = $t->getThreads();
 echo <<<ENDHTML
-<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="700" cellpadding="3" cellspacing="3">
+<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="750" cellpadding="3" cellspacing="3">
 	<tr>
 		<td>Thread ID</td>
 		<td>Board</td>
 		<td>Description</td>
 		<td>Status</td>
 		<td>Last Checked</td>
-		<td>Force Check</td>
+		<td>Actions</td>
 	</tr>
 ENDHTML;
 
@@ -43,6 +46,7 @@ foreach ( $threads as $thr )
         $link        = "<a href=\"$local\">{$thr[0]}</a>";
         $check       = "";
     }
+    $check .= "<input type=\"submit\" name=\"del\" value=\"Remove\"/>";
     echo <<<ENDHTML
     <form action="" method="POST">
     <input type="hidden" name="id" value="{$thr[0]}"/>
@@ -62,12 +66,15 @@ ENDHTML;
 </table>
 <br />
 <form action="" method="POST">
-<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="500" cellpadding="3" cellspacing="3">
+<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="610" cellpadding="3" cellspacing="3">
 	<tr>
         <td><b>Add Thread</b></td>
     </tr>
     <tr>
-        <td>Thread URL: <input type="text" name="url" size="45" /></td>
+        <td>Thread URL: <input type="text" name="url" size="60" /></td>
+    </tr>
+    <tr>
+        <td>Thread Description: <input type="text" name="desc" size="60" /></td>
         <td><input type="submit" name="submit" value="Add"/></td>
     </tr>
 </table>

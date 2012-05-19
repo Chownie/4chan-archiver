@@ -168,7 +168,24 @@ class chan_archiver
         $this->closeDB();
         return true;
     }
-
+    
+    public function removeThread( $threadid, $board )
+    {
+        $this->connectDB();
+        // check if we already have it
+        $query = mysql_query( sprintf( "SELECT * FROM `Threads` WHERE `ID` = '%s' AND Board = '%s'", $threadid, $board ) );
+        if ( !$query )
+            die( 'Could not query database: ' . mysql_error() );
+        $num = mysql_num_rows( $query );
+        if ( $num <= 0 )
+            return false;
+        mysql_query( sprintf( "DELETE FROM `Threads` WHERE `ID` = '%s' AND Board = '%s'", $threadid, $board ) );
+        mysql_query( sprintf( "DELETE FROM `Posts` WHERE `ThreadID` = '%s' AND Board = '%s'", $threadid, $board ) );
+        echo sprintf( "Removed thread %s (/%s/)<br />\r\n", $threadid, $board );
+        $this->closeDB();
+        return true;
+    }
+    
     public function setThreadDescription( $threadid, $board, $description )
     {
         $this->connectDB();
