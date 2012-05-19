@@ -1,3 +1,10 @@
+<html>
+<head>
+<title>4chan archiver - by anon e moose</title>
+</head>
+<body>
+<a href="http://github.com/emoose/4chan-archiver/"><h2>4chan archiver - by anon e moose</h2></a>
+<p>
 <?php
 include "chan_archiver.php";
 $t = new chan_archiver();
@@ -19,6 +26,7 @@ if ( isset( $_REQUEST[ 'url' ] ) && $c = preg_match_all( "/.*?(?:[a-z][a-z0-9_]*
 
 $threads = $t->getThreads();
 echo <<<ENDHTML
+</p>
 <table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="750" cellpadding="3" cellspacing="3">
 	<tr>
 		<td>Thread ID</td>
@@ -80,3 +88,5 @@ ENDHTML;
 </table>
 </form>
 <font size="1" family="Verdana">Downloaded from <a href="http://github.com/emoose/4chan-archiver/">github.com/emoose/4chan-archiver</a>. <a href="javascript:alert('nah just kidding');">check for updates?</a></font>
+</body>
+</html>
