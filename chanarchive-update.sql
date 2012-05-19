@@ -1,0 +1,1 @@
+ALTER TABLE  `Posts` ADD  `PostTime2` INT( 15 ) NOT NULL
