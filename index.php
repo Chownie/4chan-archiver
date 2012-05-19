@@ -11,6 +11,7 @@ echo <<<ENDHTML
 <a href="http://github.com/emoose/4chan-archiver/"><h2>4chan archiver - by anon e moose</h2></a>
 <p>
 ENDHTML;
+
 // login stuff
 if ( isset( $_REQUEST[ 'login' ] ) && isset( $_REQUEST[ 'user' ] ) && isset( $_REQUEST[ 'pass' ] ) )
 {
@@ -33,11 +34,7 @@ if ( $delenabled && isset( $_REQUEST[ 'upd' ] ) && isset( $_REQUEST[ 'id' ] ) &&
     $t->setThreadDescription( $_REQUEST[ 'id' ], $_REQUEST[ 'brd' ], $_REQUEST[ 'desc' ] );
 
 if ( $addenabled && isset( $_REQUEST[ 'add' ] ) && isset( $_REQUEST[ 'url' ] ) && $c = preg_match_all( "/.*?(?:[a-z][a-z0-9_]*).*?(?:[a-z][a-z0-9_]*).*?(?:[a-z][a-z0-9_]*).*?(?:[a-z][a-z0-9_]*).*?((?:[a-z][a-z0-9_]*)).*?(\d+)/is", $_REQUEST[ 'url' ], $matches ) )
-{
-    $board = $matches[ 1 ][ 0 ];
-    $id    = $matches[ 2 ][ 0 ];
-    $t->addThread( $id, $board, $_REQUEST[ 'desc' ] );
-}
+    $t->addThread( $matches[ 2 ][ 0 ], $matches[ 1 ][ 0 ], $_REQUEST[ 'desc' ] );
 
 echo "</p>";
 
@@ -53,15 +50,17 @@ if ( !$isloggedin )
         <td>Username: <input type="text" name="user" size="20" /></td>
     </tr>
     <tr>
-        <td>Password: <input type="text" name="pass" size="20" /></td>
+        <td>Password: <input type="password" name="pass" size="20" /></td>
         <td><input type="submit" name="login" value="Login"/></td>
     </tr>
 </table>
 </form>
 ENDHTML;
+
 }
 else if ( $archiver_config[ 'login_enabled' ] )
 {
+    
     echo <<<ENDHTML
 <form action="" method="POST">
 <input type="hidden" name="user" value="" />
