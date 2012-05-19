@@ -27,13 +27,14 @@ if ( isset( $_REQUEST[ 'url' ] ) && $c = preg_match_all( "/.*?(?:[a-z][a-z0-9_]*
 $threads = $t->getThreads();
 echo <<<ENDHTML
 </p>
-<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="750" cellpadding="3" cellspacing="3">
+<table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="900" cellpadding="3" cellspacing="3">
 	<tr>
 		<td>Thread ID</td>
 		<td>Board</td>
 		<td>Description</td>
 		<td>Status</td>
 		<td>Last Checked</td>
+		<td>Last Post</td>
 		<td>Actions</td>
 	</tr>
 ENDHTML;
@@ -55,7 +56,11 @@ foreach ( $threads as $thr )
         $check       = "";
     }
     $check .= "<input type=\"submit\" name=\"del\" value=\"Remove\"/>";
+    $lastpost = date("m/d/y, g:i a", $thr[5]);
+    if($thr[5] == "" || $thr[5] <= 0)
+        $lastpost = "N/A";
     echo <<<ENDHTML
+
     <form action="" method="POST">
     <input type="hidden" name="id" value="{$thr[0]}"/>
     <input type="hidden" name="brd" value="{$thr[1]}"/>
@@ -65,6 +70,7 @@ foreach ( $threads as $thr )
 		<td><input type="text" name="desc" value="{$thr[4]}"/><input type="submit" name="upd" value="Update"/></td>
 		<td>$status</td>
 		<td>$lastchecked</td>
+		<td>$lastpost</td>
 		<td>$check</td>
 	</tr>
     </form>

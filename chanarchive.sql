@@ -16,7 +16,8 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `Posts` (
   `ID` int(15) NOT NULL,
   `ThreadID` int(15) NOT NULL,
-  `Board` varchar(10) COLLATE utf8_unicode_ci NOT NULL
+  `Board` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `PostTime` int(15) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------

@@ -116,6 +116,10 @@ class chan_archiver
             $id   = $id[ 0 ];
             if ( in_array( $id, $postarr ) )
                 continue;
+
+            $posttime = explode( "data-utc=\"", $post[ 0 ] );
+            $posttime = explode( "\"", $posttime[ 1 ] );
+            $posttime = $posttime[ 0 ];
             
             $file = explode( "\">File:", $post[ 0 ] );
             if ( count( $file ) > 1 )
@@ -143,7 +147,7 @@ class chan_archiver
                 $fixeddata = str_replace( $thumurl, $pubthumstor, $fixeddata );
                 //echo "<!-- " . $fileurl . " -->";
             }
-            mysql_query( sprintf( "INSERT INTO `Posts` ( `ID`, `ThreadID`, `Board` ) VALUES ( '%s', '%s', '%s' )", $id, $threadid, $board ) );
+            mysql_query( sprintf( "INSERT INTO `Posts` ( `ID`, `ThreadID`, `Board`, `PostTime` ) VALUES ( '%s', '%s', '%s', '%s' )", $id, $threadid, $board, $posttime ) );
         }
         echo sprintf( "Checked %s (/%s/) at %s<br />\r\n", $threadid, $board, time() );
         mysql_query( sprintf( "UPDATE `Threads` SET `LastChecked` = '%s' WHERE `Board` = '%s' AND `ID` = '%s'", time(), $board, $threadid ) );
@@ -201,7 +205,6 @@ class chan_archiver
         $this->closeDB();
         return true;
     }
-
     public function getThreads()
     {
         $this->connectDB();
@@ -210,13 +213,22 @@ class chan_archiver
             die( 'Could not query database: ' . mysql_error() );
         $thrarray = array();
         while ( $thr = mysql_fetch_object( $query ) )
+        {
+            $q2 = mysql_query( sprintf("SELECT * FROM `Posts` WHERE `ThreadID` = '%s' AND `Board` = '%s' ORDER BY `PostTime` DESC", $thr->ID, $thr->Board));
+            $lasttime = 0;
+            if ( !$q2 )
+                die( 'Could not query database: ' . mysql_error() );
+            if ( mysql_num_rows( $q2 ) > 0 )
+                $lasttime = mysql_fetch_object( $q2 )->PostTime;
             array_push( $thrarray, array(
                  $thr->ID,
                 $thr->Board,
                 $thr->Status,
                 $thr->LastChecked,
-                $thr->Description 
+                $thr->Description,
+                $lasttime
             ) );
+        }
         $this->closeDB();
         return $thrarray;
     }
