@@ -66,11 +66,15 @@ else if ( $archiver_config[ 'login_enabled' ] )
 <input type="hidden" name="user" value="" />
 <input type="hidden" name="pass" value="" />
 <input type="submit" name="login" value="Logout"/>
+</form>
 ENDHTML;
 }
 
 $threads = $t->getThreads();
 echo <<<ENDHTML
+<form action="" method="POST">
+<input type="submit" name="refresh" value="Refresh"/>
+</form>
 <table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="900" cellpadding="3" cellspacing="3">
 	<tr>
 		<td>Thread ID</td>
