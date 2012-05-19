@@ -1,5 +1,5 @@
 <?php
-// enjoi
+// enjoi -stk25
 error_reporting( E_ALL );
 
 include "config.php";
@@ -162,7 +162,7 @@ class chan_archiver
         $query = mysql_query( sprintf( "INSERT INTO `Threads` ( `ID`, `Board`, `Status`, `LastChecked`, `Description` ) VALUES ( '%s', '%s', '1', '0', '%s' )", $threadid, $board, $description ) );
         if ( !$query )
             die( 'Could not add thread: ' . mysql_error() );
-        echo sprintf( "Added %s (/%s/)<br />\r\n", $threadid, $board );
+        echo sprintf( "Added thread %s (/%s/)<br />\r\n", $threadid, $board );
         $this->closeDB();
         return true;
     }
@@ -178,7 +178,7 @@ class chan_archiver
         if ( $num <= 0 )
             return false;
         mysql_query( sprintf( "UPDATE `Threads` SET `Description` = '%s' WHERE `ID` = '%s' AND Board = '%s'", $description, $threadid, $board ) );
-        echo sprintf( "Updated %s (/%s/)<br />\r\n", $threadid, $board );
+        echo sprintf( "Updated thread %s (/%s/)<br />\r\n", $threadid, $board );
         $this->closeDB();
         return true;
     }
