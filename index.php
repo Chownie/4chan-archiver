@@ -1,30 +1,31 @@
 <?php
 session_start();
 include "chan_archiver.php";
-?>
+$t = new chan_archiver();
+echo <<<ENDHTML
 <html>
 <head>
 <title>4chan archiver - by anon e moose</title>
 </head>
 <body>
 <a href="http://github.com/emoose/4chan-archiver/"><h2>4chan archiver - by anon e moose</h2></a>
-<?php
+<p>
+ENDHTML;
 // login stuff
-if( isset( $_REQUEST[ 'login' ] ) && isset( $_REQUEST[ 'user' ] ) && isset( $_REQUEST[ 'pass' ] ) )
+if ( isset( $_REQUEST[ 'login' ] ) && isset( $_REQUEST[ 'user' ] ) && isset( $_REQUEST[ 'pass' ] ) )
 {
-    $_SESSION['uname'] = $_REQUEST['user'];
-    $_SESSION['pword'] = $_REQUEST['pass'];
+    $_SESSION[ 'uname' ] = $_REQUEST[ 'user' ];
+    $_SESSION[ 'pword' ] = $_REQUEST[ 'pass' ];
 }
-$isloggedin = ( isset($_SESSION['uname']) && isset($_SESSION['pword']) && $_SESSION['uname'] == $archiver_config['login_user'] && $_SESSION['pword'] == $archiver_config['login_pass'] ) || !$archiver_config['login_enabled'];
 
-$t = new chan_archiver();
-$delenabled = ( !$archiver_config['login_del'] || $isloggedin );
-$chkenabled = ( !$archiver_config['login_chk'] || $isloggedin );
-$addenabled = ( !$archiver_config['login_add'] || $isloggedin );
-echo "<p>";
+$isloggedin = ( isset( $_SESSION[ 'uname' ] ) && isset( $_SESSION[ 'pword' ] ) && $_SESSION[ 'uname' ] == $archiver_config[ 'login_user' ] && $_SESSION[ 'pword' ] == $archiver_config[ 'login_pass' ] ) || !$archiver_config[ 'login_enabled' ];
+$delenabled = ( !$archiver_config[ 'login_del' ] || $isloggedin );
+$chkenabled = ( !$archiver_config[ 'login_chk' ] || $isloggedin );
+$addenabled = ( !$archiver_config[ 'login_add' ] || $isloggedin );
+
 if ( $delenabled && isset( $_REQUEST[ 'del' ] ) && isset( $_REQUEST[ 'id' ] ) && isset( $_REQUEST[ 'brd' ] ) )
     $t->removeThread( $_REQUEST[ 'id' ], $_REQUEST[ 'brd' ] );
-    
+
 if ( $chkenabled && isset( $_REQUEST[ 'chk' ] ) && isset( $_REQUEST[ 'id' ] ) && isset( $_REQUEST[ 'brd' ] ) )
     $t->updateThread( $_REQUEST[ 'id' ], $_REQUEST[ 'brd' ] );
 
@@ -35,9 +36,12 @@ if ( $addenabled && isset( $_REQUEST[ 'add' ] ) && isset( $_REQUEST[ 'url' ] ) &
 {
     $board = $matches[ 1 ][ 0 ];
     $id    = $matches[ 2 ][ 0 ];
-    $t->addThread( $id, $board, $_REQUEST['desc'] );
+    $t->addThread( $id, $board, $_REQUEST[ 'desc' ] );
 }
-if(!$isloggedin)
+
+echo "</p>";
+
+if ( !$isloggedin )
 {
     echo <<<ENDHTML
 <form action="" method="POST">
@@ -55,7 +59,9 @@ if(!$isloggedin)
 </table>
 </form>
 ENDHTML;
-} else if($archiver_config[ 'login_enabled' ]) {
+}
+else if ( $archiver_config[ 'login_enabled' ] )
+{
     echo <<<ENDHTML
 <form action="" method="POST">
 <input type="hidden" name="user" value="" />
@@ -63,9 +69,9 @@ ENDHTML;
 <input type="submit" name="login" value="Logout"/>
 ENDHTML;
 }
+
 $threads = $t->getThreads();
 echo <<<ENDHTML
-</p>
 <table border="1" bordercolor="#FFCC00" style="background-color:#FFFFCC" width="900" cellpadding="3" cellspacing="3">
 	<tr>
 		<td>Thread ID</td>
@@ -88,7 +94,7 @@ foreach ( $threads as $thr )
     $local  = $archiver_config[ 'pubstorage' ] . $thr[ 1 ] . "/" . $thr[ 0 ] . ".html";
     $link   = "<a href=\"$thrlink\">{$thr[0]}</a> <a href=\"$local\">(local)</a>";
     $check  = $chkenabled ? "<input type=\"submit\" name=\"chk\" value=\"Check\"/>" : "";
-    $desc = $delenabled ? "<input type=\"text\" name=\"desc\" value=\"{$thr[4]}\"/><input type=\"submit\" name=\"upd\" value=\"Update\"/>" : $thr[4];
+    $desc   = $delenabled ? "<input type=\"text\" name=\"desc\" value=\"{$thr[4]}\"/><input type=\"submit\" name=\"upd\" value=\"Update\"/>" : $thr[ 4 ];
     if ( $thr[ 2 ] == 0 )
     {
         $lastchecked = "";
@@ -96,8 +102,8 @@ foreach ( $threads as $thr )
         $check       = "";
     }
     $check .= $delenabled ? "<input type=\"submit\" name=\"del\" value=\"Remove\"/>" : "";
-    $lastpost = date("m/d/y, g:i a", $thr[5]);
-    if($thr[5] == "" || $thr[5] <= 0)
+    $lastpost = date( "m/d/y, g:i a", $thr[ 5 ] );
+    if ( $thr[ 5 ] == "" || $thr[ 5 ] <= 0 )
         $lastpost = "N/A";
     echo <<<ENDHTML
 
@@ -116,8 +122,10 @@ foreach ( $threads as $thr )
     </form>
 ENDHTML;
 }
+
 echo "</table><br />";
-if($addenabled)
+
+if ( $addenabled )
 {
     echo <<<ENDHTML
 <form action="" method="POST">
