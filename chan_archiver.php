@@ -97,7 +97,7 @@ class chan_archiver
             return;
         }
         $fixeddata = str_replace( "=\"//", "=\"http://", $data );
-        
+        $fixeddata = str_replace( "\"" . $threadid . "#", "\"" . $threadid . ".html#", $data );
         if ( is_dir( $archiver_config[ 'storage' ] . $board . "/" ) === FALSE )
             mkdir( $archiver_config[ 'storage' ] . $board . "/" );
         if ( is_dir( $archiver_config[ 'storage' ] . $board . "/" . $threadid . "/" ) === FALSE )
