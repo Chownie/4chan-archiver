@@ -98,6 +98,8 @@ class chan_archiver
         }
         $fixeddata = str_replace( "=\"//", "=\"http://", $data );
         $fixeddata = str_replace( "\"" . $threadid . "#", "\"" . $threadid . ".html#", $data );
+        $fixeddata = str_replace( "text/rocketscript", "text/javascript", $data );
+        $fixeddata = str_replace( "data-rocketsrc", "src", $data );
         if ( is_dir( $archiver_config[ 'storage' ] . $board . "/" ) === FALSE )
             mkdir( $archiver_config[ 'storage' ] . $board . "/" );
         if ( is_dir( $archiver_config[ 'storage' ] . $board . "/" . $threadid . "/" ) === FALSE )
